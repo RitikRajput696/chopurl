@@ -15,11 +15,14 @@ export default function Home() {
     setLoading(true);
     setShortUrl(null);
     try {
-      const res = await fetch("http://localhost:3000/api/shorten", {
-        method: "POST",
-        body: JSON.stringify({ originalUrl: url }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/shorten`,
+        {
+          method: "POST",
+          body: JSON.stringify({ originalUrl: url }),
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       const data = await res.json();
       setShortUrl(data.shortUrl);
