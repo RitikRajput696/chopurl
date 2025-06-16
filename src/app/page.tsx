@@ -9,7 +9,25 @@ export default function Home() {
   const [shortUrl, setShortUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const handleShorten = async () => {
-    console.log(url);
+    if (!url) {
+      return;
+    }
+    setLoading(true);
+    setShortUrl(null);
+    try {
+      const res = await fetch("http://localhost:3000/api/shorten", {
+        method: "POST",
+        body: JSON.stringify({ originalUrl: url }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      setShortUrl(data.shortUrl);
+    } catch (error) {
+      console.log("error, while shortening data", error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 px-4 text-white">
@@ -33,8 +51,8 @@ export default function Home() {
             {loading ? "Shortening..." : "Shorten URL"}
           </Button>
           {shortUrl && (
-            <div className="mt-4 rounded-xl bg-black/30 p-4 text-center wrap-break-word">
-              your short url :
+            <div className="mt-4 rounded-xl bg-black/30 p-4 text-center wrap-break-word text-white">
+              <p>your short url:</p>
               <a href={shortUrl} target="_blank" rel="noopener noreferrer">
                 {shortUrl}
               </a>
@@ -45,81 +63,3 @@ export default function Home() {
     </main>
   );
 }
-
-// 'use client';
-
-// import { useState } from 'react';
-// import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input';
-// import { Card, CardContent } from '@/components/ui/card';
-// import { motion } from 'framer-motion';
-
-// export default function HomePage() {
-//   const [url, setUrl] = useState('');
-//   const [shortUrl, setShortUrl] = useState<string | null>(null);
-//   const [loading, setLoading] = useState(false);
-
-//   const handleShorten = async () => {
-//     if (!url) return;
-//     setLoading(true);
-//     setShortUrl(null);
-//     try {
-//       const res = await fetch('/api/shorten', {
-//         method: 'POST',
-//         body: JSON.stringify({ originalUrl: url }),
-//         headers: { 'Content-Type': 'application/json' },
-//       });
-//       const data = await res.json();
-//       setShortUrl(data.shortUrl);
-//     } catch (err) {
-//       console.error('Error shortening URL:', err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white px-4">
-//       <motion.h1
-//         initial={{ opacity: 0, y: -20 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         className="text-4xl font-bold mb-6 text-center"
-//       >
-//         ChopURL — Clean & Quick Link Shortener
-//       </motion.h1>
-
-//       <Card className="w-full max-w-xl p-6 bg-slate-800/70 backdrop-blur rounded-2xl shadow-xl">
-//         <CardContent className="flex flex-col gap-4">
-//           <Input
-//             type="url"
-//             placeholder="Paste your long URL here..."
-//             className="bg-white/10 text-white placeholder:text-white/40 border border-white/20"
-//             value={url}
-//             onChange={(e) => setUrl(e.target.value)}
-//           />
-//           <Button onClick={handleShorten} disabled={loading} className="bg-teal-500 hover:bg-teal-400">
-//             {loading ? 'Shortening...' : 'Shorten URL'}
-//           </Button>
-
-//           {shortUrl && (
-//             <motion.div
-//               initial={{ opacity: 0, scale: 0.95 }}
-//               animate={{ opacity: 1, scale: 1 }}
-//               className="mt-4 p-4 bg-black/30 rounded-xl text-center break-words"
-//             >
-//               Your short URL:
-//               <a
-//                 href={shortUrl}
-//                 className="block text-teal-300 mt-1 hover:underline"
-//                 target="_blank"
-//                 rel="noopener noreferrer"
-//               >
-//                 {shortUrl}
-//               </a>
-//             </motion.div>
-//           )}
-//         </CardContent>
-//       </Card>
-//     </main>
-//   );
-// }
