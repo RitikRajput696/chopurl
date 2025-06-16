@@ -10,7 +10,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const handleShorten = async () => {
     console.log(url);
-    console.log(process.env.NEXT_PUBLIC_DATABASE_URL);
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 px-4 text-white">
