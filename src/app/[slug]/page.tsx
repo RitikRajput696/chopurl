@@ -1,0 +1,25 @@
+import { db } from "@/db";
+import { urls } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+
+interface SlugPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function RedirectPage(props: SlugPageProps) {
+  const params = props.params;
+  const slug = params.slug;
+  console.log(slug);
+  const result = await db.select().from(urls).where(eq(urls.slug, slug));
+
+  if (result.length === 0) {
+    return <div className="p-8 text-center text-white">URL not found</div>;
+  }
+  console.log(result);
+  const originalUrl = result[0].originalUrl;
+  console.log(originalUrl);
+  redirect(originalUrl);
+}

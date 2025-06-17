@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [url, setUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const handleShorten = async () => {
     if (!url) {
       return;
@@ -15,14 +15,11 @@ export default function Home() {
     setLoading(true);
     setShortUrl(null);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/shorten`,
-        {
-          method: "POST",
-          body: JSON.stringify({ originalUrl: url }),
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      const res = await fetch("/api/shorten", {
+        method: "POST",
+        body: JSON.stringify({ originalUrl: url }),
+        headers: { "Content-Type": "application/json" },
+      });
 
       const data = await res.json();
       setShortUrl(data.shortUrl);
