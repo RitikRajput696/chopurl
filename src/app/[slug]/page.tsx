@@ -10,13 +10,13 @@ interface SlugPageProps {
 }
 
 export default async function RedirectPage(props: SlugPageProps) {
-  const params = props.params;
-  const slug = params.slug;
+  const params = await props.params;
+  const slug = await params.slug;
   console.log(slug);
   const result = await db.select().from(urls).where(eq(urls.slug, slug));
 
   if (result.length === 0) {
-    return <div className="p-8 text-center text-white">URL not found</div>;
+    return <div className="p-8 text-center">URL not found</div>;
   }
   console.log(result);
   const originalUrl = result[0].originalUrl;
